@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,6 +30,7 @@ namespace Test_Api
                 Altura.Text = pokemon.height.ToString();
                 Ancho.Text = pokemon.weight.ToString();
 
+                descargarImg(pokemon.sprites.front_default);
                 
             }
             else
@@ -43,6 +45,29 @@ namespace Test_Api
         {
             Api api = new Api();
             pokemon = await api.pruebaAsync(Buscar.Text.ToLower());
+        }
+
+        private void descargarImg(string url)
+        {
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    byte[] imagen = webClient.DownloadData(url);
+
+                    using(var stream = new System.IO.MemoryStream(imagen))
+                    {
+                        Imagen.Image = Image.FromStream(stream);
+                        Imagen.SizeMode = PictureBoxSizeMode.Zoom;
+                    }
+                }
+
+                catch(Exception ex)
+                {
+                    MessageBox.Show($"Error al cargar la imagen: {ex.Message}", 
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

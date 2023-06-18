@@ -15,5 +15,6 @@ namespace Test_Api.Models
         public Boolean is_default;
         public int order;
         public int weight;
+        public PokemonSprites sprites;
     }   
 }
